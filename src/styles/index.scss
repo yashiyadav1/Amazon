@@ -1,9 +1,12 @@
+@use "sass:color";
+
 // Variables
-$primary-color: #1a2a3a;
-$secondary-color: #2c3e50;
-$accent-color: #3498db;
+$primary-color: #232F3E;
+$secondary-color: #37475A;
+$accent-color: #FF9900;
 $text-color: #333;
 $light-text: #ecf0f1;
+$light-grey-text: #b0b8c1;
 $bg-color: #f4f4f4;
 
 // Mixins
@@ -11,6 +14,26 @@ $bg-color: #f4f4f4;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@mixin transition($property: all, $duration: 0.3s, $timing: ease) {
+  transition: $property $duration $timing;
+}
+
+// Keyframes for animations
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 // Global styles
@@ -29,15 +52,22 @@ body {
 
 .container {
   width: 80%;
+  max-width: 1200px;
   margin: 0 auto;
-  overflow: hidden;
+  padding: 0 20px;
 }
 
 // Header styles
 header {
-  background-color: $primary-color;
+  background-color: rgba($primary-color, 0.95);
   color: $light-text;
   padding: 1rem 0;
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  @include transition(background-color);
 
   .container {
     display: flex;
@@ -46,7 +76,12 @@ header {
   }
 
   h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    @include transition(transform);
+    
+    &:hover {
+      transform: scale(1.05);
+    }
   }
 
   nav {
@@ -60,10 +95,27 @@ header {
         a {
           color: $light-text;
           text-decoration: none;
-          transition: color 0.3s ease;
+          @include transition(color);
+          position: relative;
+
+          &::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            bottom: -5px;
+            left: 0;
+            background-color: $accent-color;
+            transform: scaleX(0);
+            @include transition(transform);
+          }
 
           &:hover {
             color: $accent-color;
+
+            &::after {
+              transform: scaleX(1);
+            }
           }
         }
       }
@@ -75,10 +127,11 @@ header {
       color: $light-text;
       font-size: 1.5rem;
       margin-left: 1rem;
-      transition: color 0.3s ease;
+      @include transition(color, transform);
 
       &:hover {
         color: $accent-color;
+        transform: scale(1.2);
       }
     }
   }
@@ -88,30 +141,56 @@ header {
 .hero {
   background-color: $secondary-color;
   color: $light-text;
-  padding: 4rem 0;
+  padding: 8rem 0 4rem;
   text-align: center;
-
+  background-image: linear-gradient(45deg, $primary-color, $secondary-color);
+  
   h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
+    animation: slideInFromLeft 1s ease-out;
   }
 
   h2 {
     font-size: 1.5rem;
     margin-bottom: 2rem;
+    color: $light-grey-text;
+    animation: slideInFromRight 1s ease-out;
+  }
+
+  .cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
   }
 
   .cta-button {
     display: inline-block;
     background-color: $accent-color;
-    color: $light-text;
+    color: $text-color;
     padding: 0.75rem 1.5rem;
     text-decoration: none;
     border-radius: 5px;
-    transition: background-color 0.3s ease;
+    font-weight: bold;
+    @include transition(background-color, transform);
+    border: 2px solid $accent-color;
 
     &:hover {
-      background-color: darken($accent-color, 10%);
+      background-color: transparent;
+      color: $light-text;
+      transform: translateY(-3px);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  .resume-button {
+    background-color: $accent-color;
+    color: $text-color;
+
+    &:hover {
+      background-color: transparent;
+      color: $light-text;
     }
   }
 }
@@ -119,18 +198,36 @@ header {
 // Section styles
 section {
   padding: 4rem 0;
+  opacity: 0;
+  transform: translateY(20px);
+  @include transition(opacity, transform);
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
 
   h2 {
     text-align: center;
     font-size: 2.5rem;
     margin-bottom: 2rem;
     color: $primary-color;
+    position: relative;
+    
+    &::after {
+      content: '';
+      display: block;
+      width: 50px;
+      height: 3px;
+      background-color: $accent-color;
+      margin: 10px auto 0;
+    }
   }
 
   p {
     text-align: center;
     max-width: 800px;
-    margin: 0 auto;
+    margin: 0 auto 2rem;
   }
 }
 
@@ -146,15 +243,109 @@ section {
 
     .skill-item {
       text-align: center;
-      width: 100px;
+      width: 120px;
+      @include transition(transform);
+
+      &:hover {
+        transform: translateY(-5px);
+      }
 
       i {
         font-size: 3rem;
         color: $accent-color;
         margin-bottom: 0.5rem;
       }
+
+      span {
+        display: block;
+        font-weight: bold;
+      }
     }
   }
+}
+
+// Experience and Projects sections
+.experience, .projects {
+  .item {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 2rem;
+    margin-bottom: 2rem;
+    @include transition(transform, box-shadow);
+
+    &:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    h3 {
+      color: $primary-color;
+      margin-bottom: 0.5rem;
+    }
+
+    .meta {
+      color: $secondary-color;
+      font-style: italic;
+      margin-bottom: 1rem;
+    }
+
+    ul {
+      list-style-type: disc;
+      padding-left: 20px;
+    }
+  }
+}
+
+// Contact section
+.contact {
+  background-color: $secondary-color;
+  color: $light-text;
+
+  h2 {
+    color: $light-grey-text;  // Keep the section title white for emphasis
+  }
+
+  .contact-info {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      @include transition(transform);
+
+      &:hover {
+        transform: translateY(-3px);
+      }
+
+      i {
+        font-size: 1.5rem;
+        margin-right: 0.5rem;
+        color: $accent-color;
+      }
+
+      a {
+        color: $light-text;
+        text-decoration: none;
+        @include transition(color);
+
+        &:hover {
+          color: $accent-color;
+        }
+      }
+    }
+  }
+}
+
+// Footer
+footer {
+  background-color: $primary-color;
+  color: $light-text;
+  text-align: center;
+  padding: 1rem 0;
 }
 
 // Responsive design
@@ -179,6 +370,8 @@ section {
   }
 
   .hero {
+    padding-top: 6rem;
+
     h1 {
       font-size: 2.5rem;
     }

@@ -1,4 +1,3 @@
-// File: src/components/Experience.js
 import React from 'react';
 
 const experiences = [
@@ -40,26 +39,23 @@ const experiences = [
 
 const Experience = () => {
   return (
-    <section id="experience" className="py-20">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-12 text-center">Experience</h2>
-        <div className="space-y-12">
-          {experiences.map((exp, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-2">{exp.title}</h3>
-              <p className="text-gray-600 mb-4">{exp.company} | {exp.period}</p>
-              <ul className="list-disc list-inside space-y-2">
-                {exp.description.map((item, i) => (
-                  <li key={i}>{item}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+    <section id="experience" className="experience">
+      <div className="container">
+        <h2>Experience</h2>
+        {experiences.map((exp, index) => (
+          <div key={index} className="item">
+            <h3>{exp.title}</h3>
+            <p className="meta">{exp.company} | {exp.period}</p>
+            <ul>
+              {exp.description.map((item, i) => (
+                <li key={i}>{item}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </section>
   );
 };
 
 export default Experience;
-

@@ -1,4 +1,3 @@
-// File: src/components/Projects.js (continued)
 import React from 'react';
 
 const projects = [
@@ -44,22 +43,20 @@ const projects = [
 
 const Projects = () => {
   return (
-    <section id="projects" className="bg-gray-200 py-20">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-12 text-center">Projects</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <div key={index} className="bg-white shadow-md rounded-lg p-6">
-              <h3 className="text-xl font-bold mb-4">{project.title}</h3>
-              <p className="text-gray-600 mb-4">{project.description}</p>
-              <ul className="list-disc list-inside space-y-2">
-                {project.features.map((feature, i) => (
-                  <li key={i}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </div>
+    <section id="projects" className="projects">
+      <div className="container">
+        <h2>Projects</h2>
+        {projects.map((project, index) => (
+          <div key={index} className="item">
+            <h3>{project.title}</h3>
+            <p>{project.description}</p>
+            <ul>
+              {project.features.map((feature, i) => (
+                <li key={i}>{feature}</li>
+              ))}
+            </ul>
+          </div>
+        ))}
       </div>
     </section>
   );

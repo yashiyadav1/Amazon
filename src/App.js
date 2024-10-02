@@ -1,4 +1,3 @@
-// File: src/App.js
 import React, { useEffect, useState } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
@@ -9,6 +8,7 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { FaArrowUp } from 'react-icons/fa';
+import { initializeSectionObserver } from './utils/animations';
 
 function App() {
   const [showBackToTop, setShowBackToTop] = useState(false);
@@ -51,6 +51,11 @@ function App() {
         link.removeEventListener('click', smoothScroll);
       });
     };
+  }, []);
+
+  useEffect(() => {
+    const cleanup = initializeSectionObserver();
+    return cleanup;
   }, []);
 
   return (
